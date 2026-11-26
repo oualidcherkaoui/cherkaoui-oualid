@@ -1,0 +1,457 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\frenchsetup{StandardLists=true}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[labelsep=colon]{caption}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[hidelinks]{hyperref}
+
+% ========== Mise en page et commandes du gabarit (ne pas modifier) ==========
+\addto\captionsfrench{%
+  \renewcommand{\tablename}{Tableau}%
+  \renewcommand{\refname}{Références et citations}}
+\setlist{itemsep=1pt,topsep=3pt}
+\setlength{\emergencystretch}{2em}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.2ex \@plus 0.4ex \@minus 0.2ex}{-1em}{\normalfont\normalsize\bfseries}}
+\makeatother
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newcounter{nbacompleter}
+\DeclareRobustCommand{\acompleter}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{[À compléter : #1]}}}
+\DeclareRobustCommand{\acel}[1]{%
+  \stepcounter{nbacompleter}\textcolor{red}{\textit{#1}}}
+% \insererfigure{fichier}{légende}{étiquette}
+\newcommand{\insererfigure}[3]{%
+  \begin{figure}[htbp]
+    \centering
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.62\linewidth]{../figures/#1}}{%
+      \IfFileExists{figures/#1}{\includegraphics[width=0.62\linewidth]{figures/#1}}{%
+        \fbox{\parbox[c][2.4cm][c]{0.6\linewidth}{\centering\small
+          Figure à insérer : \texttt{figures/\detokenize{#1}}}}}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}}
+% ---------- VOTRE LIEN GITHUB : remplacez l'adresse ci-dessous ----------
+\newcommand{\lienDepot}{https://github.com/identifiant/CodeApogee-Nom-Groupe}
+% -------------------------------------------------------------------------
+\newcommand{\lienParDefaut}{https://github.com/identifiant/CodeApogee-Nom-Groupe}
+\newcommand{\afficherlien}{%
+  \ifx\lienDepot\lienParDefaut
+    \stepcounter{nbacompleter}\textcolor{red}{\expandafter\url\expandafter{\lienDepot}}%
+  \else
+    \expandafter\url\expandafter{\lienDepot}%
+  \fi}
+% Photo de l'étudiant(e) : photo_etudiant.jpg ou photo_etudiant.png.
+% Tant qu'elle manque, la photo modèle (photo_modele.png) s'affiche avec la
+% mention « Remplacez par votre photo », et compte comme élément à compléter.
+\newcommand{\photo}[1]{\includegraphics[width=3.5cm,height=4.5cm,keepaspectratio]{#1}}
+\newcommand{\insererphoto}{%
+  \IfFileExists{photo_etudiant.jpg}{\photo{photo_etudiant.jpg}}{%
+    \IfFileExists{photo_etudiant.png}{\photo{photo_etudiant.png}}{%
+    \IfFileExists{photo_modele.png}{\stepcounter{nbacompleter}\photo{photo_modele.png}\\[3pt]%
+      {\scriptsize\textcolor{red}{\textit{Remplacez par votre photo}}}}{%
+      \fbox{\parbox[c][4.5cm][c]{3.5cm}{\centering\small\textcolor{red}{\textit{Photo de\\ l'étudiant(e)}}\\[4pt]
+        \scriptsize\texttt{photo\_etudiant.jpg}}}}}}}
+% Logos de la page de garde : déposez les deux fichiers à côté de rapport.tex
+% (ou dans figures/). Modifiez les noms ci-dessous si vos fichiers s'appellent autrement.
+\newcommand{\fichierlogouniv}{logo_universite_hassan1.png}
+\newcommand{\fichierlogo}{logo_encg_settat.png}
+% \chercherimage{fichier}{options}{largeur du cadre}{hauteur du cadre}{texte du cadre}
+\newcommand{\chercherimage}[5]{%
+  \IfFileExists{#1}{\includegraphics[#2]{#1}}{%
+    \IfFileExists{figures/#1}{\includegraphics[#2]{figures/#1}}{%
+      \IfFileExists{../figures/#1}{\includegraphics[#2]{../figures/#1}}{%
+        \fbox{\parbox[c][#4][c]{#3}{\centering\small #5\\[2pt]
+          \tiny\texttt{\detokenize\expandafter{#1}}}}}}}}
+\newcommand{\insererlogouniv}{\chercherimage{\fichierlogouniv}{height=1.9cm}{5.2cm}{1.9cm}{Logo de l'Université Hassan 1\ier}}
+\newcommand{\insererlogo}{\chercherimage{\fichierlogo}{height=2.5cm}{2.5cm}{2.5cm}{Logo de l'ENCG Settat}}
+\AtEndDocument{\ifnum\value{nbacompleter}>0
+  \typeout{ATTENTION : il reste \arabic{nbacompleter} élément(s) à compléter.}\fi}
+% ===========================================================================
+
+\begin{document}
+
+% =====================================================================
+%  PAGE DE GARDE
+% =====================================================================
+\begin{titlepage}
+  \centering
+  % Logos : Université Hassan 1er à gauche, ENCG Settat à droite
+  \noindent
+  \begin{minipage}[c]{0.5\linewidth}\raggedright\insererlogouniv\end{minipage}%
+  \begin{minipage}[c]{0.5\linewidth}\raggedleft\insererlogo\end{minipage}\par
+  \vspace{0.9cm}
+  {\large Université Hassan 1\ier{} de Settat}\par
+  \vspace{0.2cm}
+  {\Large\bfseries École Nationale de Commerce et de Gestion de Settat}\par
+  \vspace{0.1cm}
+  {\large ENCG Settat}\par
+  \vspace{1.6cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vspace{0.5cm}
+  {\large Cours BD \& DS : examen individuel (Partie B)}\par
+  \vspace{0.3cm}
+  {\Large Rapport de projet de science des données appliquée au commerce international}\par
+  \vspace{0.7cm}
+  {\LARGE\bfseries CI16 : Catégories de partenaires}\par
+  \vspace{0.5cm}
+  \rule{\linewidth}{0.8pt}\par
+  \vfill
+  \begin{minipage}[c]{0.66\linewidth}
+  \large
+  \begin{tabular}{@{}ll@{}}
+    Réalisé par          & Cherkaoui Oualid \\[3pt]
+    Code Apogée          & 23009078 \\[3pt]
+    Groupe et filière    & CI, S7 CI \\[3pt]
+    Algorithme principal & Forêts aléatoires (\textit{Random Forest}) \\[3pt]
+    Enseignant        & {A. Larhlimi} \\[3pt]
+  \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.3\linewidth}
+    \centering\insererphoto
+  \end{minipage}\par
+  \vspace{0.8cm}
+  {\large\textbf{Dépôt GitHub :} \afficherlien}\par
+  \vfill
+  {\large Année universitaire 2026-2027}\par
+  \vspace{0.2cm}
+  Remis le \today
+\end{titlepage}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:introduction}
+% =====================================================================
+\paragraph{Contexte.} Dans un contexte de diversification des débouchés commerciaux du Maroc, identifier tôt les partenaires dont les importations en provenance du Maroc vont croître constitue un levier stratégique. Les entreprises exportatrices et les institutions d'appui au commerce extérieur peuvent ainsi orienter leur prospection, adapter leurs capacités logistiques et réduire leur exposition aux marchés en ralentissement.
+
+\paragraph{Problématique.} Peut-on prédire la catégorie de croissance annuelle des exportations bilatérales du Maroc (faible, modérée ou forte) à partir de l'historique des flux commerciaux, des parts de marché et des droits de douane appliqués par les pays partenaires ?
+
+\paragraph{Objectif mesurable.} Obtenir un score F1-macro supérieur ou égal à 0,65 sur le jeu de test final (les deux dernières années), tout en surpassant d'au moins 15 points de pourcentage la référence naïve, qui prédit toujours la classe majoritaire. Ce seuil a été fixé avant l'expérimentation.
+
+\paragraph{Nature du problème.} Classification supervisée multi-classes à trois classes ordonnées (faible, modérée, forte). La cible est qualitative et le but est de ranger chaque flux annuel dans l'une des trois catégories, non d'en prévoir le montant exact.
+
+\paragraph{Organisation du rapport.} La section~\ref{sec:etat} présente l'état de l'art et la section~\ref{sec:travaux} les travaux liés. Les sections~\ref{sec:donnees} à~\ref{sec:protocole} décrivent les données, leur exploration, leur préparation, l'algorithme retenu et le protocole expérimental. La section~\ref{sec:resultats} présente les résultats, discutés en section~\ref{sec:discussion}, avant la conclusion (section~\ref{sec:conclusion}).
+
+% =====================================================================
+\section{État de l'art}
+\label{sec:etat}
+% =====================================================================
+Trois grandes familles de méthodes sont utilisées pour anticiper l'évolution des flux commerciaux bilatéraux. La première est la référence naïve : dans les travaux de prévision, on compare systématiquement un modèle à une règle simple (dernière valeur observée, classe la plus fréquente), faute de quoi un gain apparent peut ne rien prouver \cite{etat1}. La deuxième est l'approche économétrique, dominée par le modèle de gravité, qui explique le commerce entre deux pays par leur taille économique, la distance et les obstacles au commerce, dont les droits de douane \cite{etat2,lie1,lie2}. La troisième est l'apprentissage automatique, qui capte des effets de seuil et des interactions sans forme fonctionnelle imposée, au prix d'une interprétation plus difficile et d'un risque de surapprentissage sur de petits échantillons \cite{etat3}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Panorama des approches pour ce type de problème}
+  \label{tab:etat}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.3cm} P{3.5cm} P{3.5cm} l@{}}
+    \toprule
+    Approche & Principe & Atouts & Limites & Réf. \\
+    \midrule
+    Référence naïve (classe majoritaire, dernière valeur) & Prédire toujours la classe la plus fréquente ou prolonger la dernière observation & Aucun paramètre, point de comparaison honnête & Ignore toute information explicative & \cite{etat1} \\
+    Modèle de gravité & Flux expliqué par la taille économique, la distance et les obstacles au commerce, estimé par régression & Fondement théorique, coefficients interprétables & Exige des variables structurelles ; forme fonctionnelle imposée & \cite{etat2,lie1,lie2} \\
+    Apprentissage automatique (forêts aléatoires) & Vote d'arbres de décision entraînés sur des échantillons bootstrap & Non-linéarités, peu de réglages, robuste aux valeurs extrêmes & Moins interprétable ; fragile sur de petits échantillons & \cite{etat3} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Travaux liés}
+\label{sec:travaux}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Travaux liés}
+  \label{tab:travaux}
+  \small
+  \begin{tabular}{@{}P{2.4cm} P{2.8cm} P{2.8cm} P{3.4cm} P{3.8cm}@{}}
+    \toprule
+    Travail & Données & Méthode & Résultat principal & Différence avec ce travail \\
+    \midrule
+    Anderson et van Wincoop, 2003 \cite{lie1} & Flux commerciaux Canada--États-Unis et entre pays industrialisés & Modèle de gravité avec résistance multilatérale & Les frontières nationales réduisent le commerce d'environ 44\,\% entre le Canada et les États-Unis & Explication structurelle d'un niveau de flux ; ici, prédiction d'une catégorie de croissance par apprentissage supervisé \\
+    Santos Silva et Tenreyro, 2006 \cite{lie2} & Flux commerciaux bilatéraux agrégés par pays & Gravité estimée par pseudo-maximum de vraisemblance de Poisson & La log-linéarisation par moindres carrés est biaisée en présence d'hétéroscédasticité ; l'estimation en niveau corrige ce biais & Ici, cible discrète et évaluation hors échantillon sur les années récentes \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Positionnement.} Ce travail reprend de ces études l'idée que les flux bilatéraux dépendent de leur passé et de variables structurelles, mais il se place sur un terrain différent : prévoir une catégorie de croissance (et non estimer des élasticités) avec une méthode d'apprentissage évaluée strictement dans le temps. Il ne dispose cependant ni du PIB, ni de la distance, ni des droits de douane, de sorte que la comparaison avec ces études reste qualitative.
+
+% =====================================================================
+\section{Jeu de données}
+\label{sec:donnees}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nom et source :} flux annuels d'exportations du Maroc par pays partenaire, UN Comtrade (Division de statistique des Nations unies) \cite{donnees}, \url{https://comtradeplus.un.org/}. \textbf{Attention :} le fichier \texttt{data/raw/donnees\_CI16.csv} était introuvable lors de l'exécution ; le notebook a donc généré un jeu \textbf{simulé} de même structure (graine 42). Tous les résultats de ce rapport portent sur ce jeu simulé.
+  \item \textbf{Date d'extraction :} 19/11/2026 (date d'exécution du notebook).
+  \item \textbf{Licence ou conditions d'utilisation :} données publiques ouvertes (UN Comtrade Open Data), pour la source réelle visée.
+  \item \textbf{Taille :} 100 observations et 6 variables, de 2015 à 2024, fréquence annuelle ; 94 observations restent après création des retards.
+  \item \textbf{Unité d'observation :} le flux annuel d'exportation du Maroc vers un pays partenaire pour une année donnée (valeur FOB en USD, poids net en kg).
+  \item \textbf{Variable cible :} \texttt{cible}, à trois classes (0 faible, 1 modérée, 2 forte), obtenue en découpant le poids net \texttt{netWgt} aux quantiles 33\,\% et 66\,\% de l'échantillon d'apprentissage (193\,505 kg et 518\,855 kg).
+  \item \textbf{Adéquation :} partielle. La structure (année, partenaire, valeur, poids) permet de monter et de valider la chaîne méthodologique, mais le jeu simulé ne contient ni droits de douane ni parts de marché, pourtant cités dans la problématique, et ses valeurs sont tirées au hasard.
+  \item \textbf{Limites :} aucune valeur manquante ni doublon ; séries très courtes (dix années, quatre à quinze lignes par partenaire) ; test de 23 observations seulement ; valeurs simulées indépendantes, donc sans véritable signal temporel.
+\end{itemize}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Dictionnaire des principales variables}
+  \label{tab:dictionnaire}
+  \small
+  \begin{tabular}{@{}l P{5.6cm} l l l c@{}}
+    \toprule
+    Variable & Description & Type & Unité & Rôle & Manquants (\%) \\
+    \midrule
+    \texttt{period} & Année de l'échange commercial & entier & année & date & 0 \\
+    \texttt{partnerDesc} & Nom du pays partenaire importateur & texte & --- & identifiant & 0 \\
+    \texttt{primaryValue} & Valeur FOB des exportations & flottant & USD & explorée & 0 \\
+    \texttt{netWgt} & Poids net des marchandises exportées & flottant & kg & base de la cible & 0 \\
+    \texttt{lag\_1} & $\texttt{netWgt}_{t-1}$ (observation précédente du groupe) & flottant & kg & explicative & 0 \\
+    \texttt{lag\_2} & $\texttt{netWgt}_{t-2}$ & flottant & kg & explicative & 0 \\
+    \texttt{diff\_1} & $\texttt{lag\_1} - \texttt{lag\_2}$ & flottant & kg & explicative & 0 \\
+    \texttt{cible} & Classe de \texttt{netWgt} selon les terciles de l'apprentissage & entier & 0, 1, 2 & cible & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Exploration}
+\label{sec:exploration}
+% =====================================================================
+\paragraph{Statistiques descriptives.} La valeur \texttt{primaryValue} a pour moyenne 1\,086\,048~USD, pour écart-type 982\,196~USD, pour médiane 798\,016~USD et s'étend de 15\,577 à 4\,610\,570~USD. Le poids net \texttt{netWgt} a pour moyenne 484\,865~kg, pour écart-type 456\,078~kg, pour médiane 343\,989~kg, entre 5\,448 et 2\,328\,502~kg. Dix partenaires apparaissent, la France étant la plus fréquente (15 lignes), devant l'Allemagne (14) et l'Italie (12). Les trois classes de la cible sont équilibrées à l'apprentissage (24, 23 et 24 observations) mais pas au test (6, 10 et 7).
+
+\paragraph{Qualité des données.} Il n'y a ni valeur manquante (0\,\% pour chaque variable) ni doublon exact. Les valeurs élevées, à droite de la distribution, ont été conservées : un flux commercial très élevé est une réalité économique, et les arbres de décision y sont peu sensibles. La seule suppression concerne les six lignes dont les retards ne sont pas calculables.
+
+\insererfigure{fig1_description.png}{Distribution de la valeur des exportations (\texttt{primaryValue}, USD)}{fig:1}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:1}.} La distribution est asymétrique à droite : la plupart des flux sont inférieurs à 1,5 million USD, avec un mode proche de zéro et une queue qui atteint 4,6 millions. Les échelles étant très inégales, des classes définies par quantiles sont plus adaptées qu'un seuil fixe. La comparaison des principaux partenaires figure en annexe~\ref{ann:complements}.
+
+\insererfigure{fig2_description.png}{Évolution annuelle de la valeur moyenne des exportations (USD)}{fig:2}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:2}.} La moyenne annuelle oscille entre environ 0,6 million USD (2019) et 1,8 million (2018), sans tendance nette. Ces variations portent sur une dizaine de lignes par an et relèvent surtout de l'aléa d'échantillonnage. Elles justifient néanmoins un découpage strictement chronologique, afin de ne jamais utiliser le futur pour prédire le passé.
+
+% =====================================================================
+\section{Préparation}
+\label{sec:preparation}
+% =====================================================================
+\begin{itemize}
+  \item \textbf{Nettoyage :} suppression des doublons exacts (aucun), tri chronologique par groupe et par année, puis retrait des 6 lignes sans retard disponible (94 lignes conservées).
+  \item \textbf{Variables créées :} \texttt{lag\_1}, \texttt{lag\_2} et \texttt{diff\_1}, formules dans le tableau~\ref{tab:dictionnaire}. Elles sont calculées sur \texttt{netWgt} au sein de chaque groupe, à partir du passé seulement.
+  \item \textbf{Encodage et mise à l'échelle :} imputation par la médiane puis standardisation, dans un \texttt{ColumnTransformer}. Aucun encodage n'est nécessaire, car seules trois variables numériques sont utilisées ; la standardisation n'est pas indispensable pour une forêt aléatoire, mais elle est sans effet néfaste.
+\end{itemize}
+
+\paragraph{Prévention des fuites.}
+\begin{itemize}
+  \item[$\boxtimes$] Transformations ajustées sur l'apprentissage seulement, dans un \texttt{Pipeline}.
+  \item[$\boxtimes$] Découpage chronologique, sans mélange (apprentissage 2015--2022, test 2023--2024).
+  \item[$\boxtimes$] Variables construites avec le passé seulement ; la cible porte sur la période courante, aucun écart supplémentaire n'est donc nécessaire.
+  \item[$\boxtimes$] Aucune variable ne contient la cible, même indirectement ; les seuils de la cible (quantiles) sont calculés sur l'apprentissage seulement.
+  \item[$\boxtimes$] Jeu de test utilisé une seule fois, à la fin.
+\end{itemize}
+L'alignement des dates a été vérifié en affichant cinq lignes du test avec leur année, leurs variables, leur cible et la prédiction (tableau~\ref{tab:illustration}).
+
+% =====================================================================
+\section{Algorithme}
+\label{sec:algorithme}
+% =====================================================================
+\paragraph{Choix.} Forêts aléatoires (\textit{Random Forest Classifier}), algorithme de classification du cours (numéros 8 à 16 de l'annexe A de l'énoncé) \cite{support}. Les échanges commerciaux comportent des effets de seuil et des relations non linéaires entre variations passées et croissance future ; la forêt les capte sans hypothèse de forme et limite la variance par agrégation \cite{etat3}. La régression logistique, alternative linéaire plausible, a été écartée car sa frontière de décision linéaire rend mal les retournements brusques ; les $k$ plus proches voisins l'ont été car ils sont sensibles aux valeurs extrêmes et au bruit.
+
+\paragraph{Principe.} On tire $B$ échantillons bootstrap de l'apprentissage ; sur chacun, un arbre de décision est construit en ne considérant à chaque nœud qu'un sous-ensemble aléatoire de variables et en minimisant l'impureté de Gini. La prédiction finale est le vote majoritaire des arbres (figure~\ref{fig:schema}). Implémentation : \texttt{scikit-learn} \cite{sklearn}.
+
+\insererfigure{schema_algorithme.png}{Schéma de fonctionnement d'une forêt aléatoire}{fig:schema}
+
+\paragraph{Formule essentielle.}
+\begin{equation}
+  \hat{y} = \operatorname{mode}\{h_1(\mathbf{x}), h_2(\mathbf{x}), \dots, h_B(\mathbf{x})\}
+  \label{eq:principale}
+\end{equation}
+où $\hat{y}$ est la classe prédite pour l'observation ($0$ faible, $1$ modérée, $2$ forte), $\mathbf{x}$ le vecteur des variables explicatives (\texttt{lag\_1}, \texttt{lag\_2}, \texttt{diff\_1}), $B$ le nombre d'arbres (\texttt{n\_estimators}) et $h_b(\mathbf{x})$ la prédiction du $b$-ième arbre, construit sur un échantillon bootstrap et un sous-ensemble aléatoire de variables (équation~\eqref{eq:principale}).
+
+\paragraph{Paramètres appris.} Les variables et les seuils de coupure retenus à chaque nœud interne des $B$ arbres (ceux qui minimisent l'impureté de Gini), ainsi que la distribution des classes dans chaque feuille.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Hyperparamètres étudiés}
+  \label{tab:hyper}
+  \small
+  \begin{tabular}{@{}l P{6.4cm} l l@{}}
+    \toprule
+    Hyperparamètre & Rôle et effet attendu & Valeurs testées & Valeur retenue \\
+    \midrule
+    \texttt{n\_estimators} & Nombre d'arbres $B$ ; plus il est grand, plus la variance baisse, au prix du temps de calcul & 50, 100 & 100 \\
+    \texttt{max\_depth} & Profondeur maximale des arbres ; borne la complexité et limite le surapprentissage & 3, 5, 8 & 8 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Protocole expérimental}
+\label{sec:protocole}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Découpage des données}
+  \label{tab:decoupage}
+  \small
+  \begin{tabular}{@{}l l r@{}}
+    \toprule
+    Ensemble & Période ou proportion & Observations \\
+    \midrule
+    Apprentissage & 2015 à 2022 & 71 \\
+    Validation & validation croisée temporelle à 3 plis, dans l'apprentissage & (sous-ensembles des 71) \\
+    Test & 2023 à 2024 & 23 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{itemize}
+  \item \textbf{Référence naïve :} \texttt{DummyClassifier(strategy="most\_frequent")}, qui prédit toujours la classe majoritaire de l'apprentissage (ici la classe 0, à égalité avec la classe 2). C'est la règle d'un décideur sans modèle.
+  \item \textbf{Validation :} \texttt{TimeSeriesSplit} à 3 plis, avec une grille de 6 configurations (2 valeurs de \texttt{n\_estimators} $\times$ 3 de \texttt{max\_depth}), sans jamais consulter le test.
+  \item \textbf{Métrique principale :} F1-macro, moyenne non pondérée des F1 des trois classes ; elle donne le même poids aux marchés à forte croissance qu'aux marchés stables ou en recul.
+  \item \textbf{Métriques secondaires :} exactitude (\textit{accuracy}) et F1 pondéré, complétés par la matrice de confusion.
+  \item \textbf{Graine aléatoire :} 42.
+\end{itemize}
+
+% =====================================================================
+\section{Résultats}
+\label{sec:resultats}
+% =====================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{Comparaison de la référence naïve et du modèle}
+  \label{tab:resultats}
+  \small
+  \begin{tabular}{@{}l cc cc@{}}
+    \toprule
+    & \multicolumn{2}{c}{F1-macro} & \multicolumn{2}{c}{Exactitude} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    Modèle & Validation & Test & Validation & Test \\
+    \midrule
+    Référence : classe majoritaire & 0,168$^{*}$ & 0,138 & n.c. & 0,261 \\
+    Forêt aléatoire & 0,420 $\pm$ 0,042 & 0,314 & n.c. & 0,304 \\
+    \bottomrule
+  \end{tabular}\\[2pt]
+  {\footnotesize $^{*}$ Calculé sur l'ensemble de l'apprentissage, sans validation croisée. n.c. : non calculée.}
+\end{table}
+
+\insererfigure{fig3_description.png}{Matrice de confusion sur le test (à gauche) et importance des variables de la forêt (à droite)}{fig:3}
+
+\paragraph{Lecture des résultats.} Sur le test, la forêt atteint un F1-macro de 0,314 contre 0,138 pour la référence, soit un gain de 17,6 points (tableau~\ref{tab:resultats}). L'exactitude passe de 0,261 à 0,304. Le F1 par classe est de 0,30 pour la classe faible, 0,14 pour la modérée et 0,50 pour la forte ; le F1 pondéré vaut 0,29. Le score de validation (0,420) est supérieur de 10,6 points à celui du test. Les trois variables ont une importance voisine (0,36 pour \texttt{lag\_1}, 0,32 pour \texttt{lag\_2} et 0,32 pour \texttt{diff\_1}), sans variable dominante (figure~\ref{fig:3}).
+
+\paragraph{Analyse des erreurs.} La classe modérée est presque toujours manquée : 1 observation sur 10 est bien classée, 7 sont rangées en faible et 2 en forte. Le modèle prédit trop souvent la classe faible (14 prédictions sur 23, dont 11 fausses ; précision 0,21). La classe forte est la mieux reconnue (3 sur 7). Par année, 5 observations sur 12 sont bien classées en 2023 contre 2 sur 11 en 2024. La matrice complète figure en annexe~\ref{ann:complements}.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Prédictions sur des observations non utilisées pour l'apprentissage}
+  \label{tab:illustration}
+  \small
+  \begin{tabular}{@{}l l l P{7cm}@{}}
+    \toprule
+    Observation & Prédiction & Valeur réelle & Commentaire \\
+    \midrule
+    2023, Brésil & Faible & Modérée & Forte baisse passée (876\,k $\to$ 199\,k kg) ; flux réel 234\,692~kg, juste au-dessus du seuil faible \\
+    2023, France & Faible & Modérée & Flux réel 515\,414~kg, à peine sous le seuil de la classe forte (518\,855~kg) \\
+    2023, Allemagne & Forte & Modérée & Hausse passée (235\,k $\to$ 515\,k kg) extrapolée à tort ; flux réel 208\,367~kg \\
+    2023, Allemagne & Faible & Modérée & Retards en baisse ; flux réel 280\,178~kg \\
+    2023, France & Faible & Modérée & Flux réel 499\,615~kg, proche du seuil de la classe forte \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Discussion des résultats}
+\label{sec:discussion}
+% =====================================================================
+\paragraph{Réponse à l'objectif.} L'objectif fixé dans l'introduction est \textbf{non atteint}, car le F1-macro de test est de 0,314, très inférieur au seuil de 0,65. Le second critère (au moins 15 points de plus que la référence) est formellement respecté (+17,6 points), mais il tient surtout à la faiblesse de la référence, qui ne prédit qu'une seule classe : avec trois classes à peu près équilibrées, un tirage aléatoire donne un F1-macro voisin de 0,33, niveau proche de celui du modèle.
+
+\paragraph{Interprétation.} Le modèle ne dégage pas de signal exploitable. Les trois variables ont des importances quasi égales et le modèle confond surtout la classe modérée avec ses voisines, comme le montrent les observations du tableau~\ref{tab:illustration}, dont plusieurs tombent juste de l'autre côté d'un seuil. Ce résultat est cohérent avec la nature du jeu : des valeurs simulées indépendantes ne contiennent pas de dynamique à apprendre. Ces importances décrivent le modèle et n'établissent aucune causalité.
+
+\paragraph{Surapprentissage et généralisation.} Le F1-macro baisse de la validation (0,420, écart-type 0,042 sur les plis) au test (0,314), et le modèle classe parfaitement son propre apprentissage (F1-macro de 1,00). Cet écart indique un surapprentissage marqué. Avec 23 observations de test, une seule erreur modifie l'exactitude de 4,3 points : les scores doivent donc être lus avec prudence.
+
+\paragraph{Comparaison avec les travaux liés.} Les études du tableau~\ref{tab:travaux} s'appuient sur des variables structurelles (taille économique, distance, obstacles) que ce travail n'a pas, et sur de vraies données. Nos résultats ne les confirment ni ne les contredisent : ils montrent seulement que l'historique de poids exporté, sur un jeu simulé, ne suffit pas à prédire une catégorie.
+
+\paragraph{Limites et biais.} (i) Les données sont simulées, et non issues d'UN Comtrade. (ii) La cible est un tercile du poids net \texttt{netWgt} et non un taux de croissance annuel, et les retards sont calculés au sein de groupes définis par la dernière variable catégorielle (\texttt{croissance\_cat} dans l'exécution réalisée) plutôt que par partenaire ; ces deux points s'écartent de la problématique. (iii) Ni les droits de douane ni les parts de marché ne sont disponibles. (iv) Le test est très petit et la période couverte courte.
+
+\paragraph{Pistes d'amélioration.} (1) Charger le fichier UN Comtrade réel, définir la cible comme le taux de croissance annuel par partenaire et calculer les retards par \texttt{partnerDesc}. (2) Ajouter des variables structurelles (PIB du partenaire, distance, droits de douane appliqués) et valider par fenêtre glissante, avec un jeu de test plus large.
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =====================================================================
+Sur le jeu simulé disponible, la forêt aléatoire atteint un F1-macro de test de 0,314, contre 0,138 pour la classe majoritaire : l'objectif de 0,65 n'est pas atteint et la performance reste proche du hasard. Le travail apporte toutefois une chaîne méthodologique reproductible et sans fuite (pipeline, découpage chronologique, validation croisée temporelle, seuils calculés sur l'apprentissage). La perspective principale est de la rejouer sur les données réelles d'UN Comtrade, avec une vraie cible de croissance et des variables structurelles.
+
+% =====================================================================
+\begin{thebibliography}{9}
+  \bibitem{donnees} Division de statistique des Nations unies, \textit{UN Comtrade Database}, exportations du Maroc, 2015--2024, \url{https://comtradeplus.un.org/}, consulté le 19/11/2026.
+  \bibitem{etat1} R.~J. Hyndman et G.~Athanasopoulos, \textit{Forecasting: Principles and Practice}, 3\textsuperscript{e} éd., OTexts, Melbourne, 2021.
+  \bibitem{etat2} J.~Tinbergen, \textit{Shaping the World Economy: Suggestions for an International Economic Policy}, Twentieth Century Fund, New York, 1962.
+  \bibitem{etat3} L.~Breiman, « Random Forests », \textit{Machine Learning}, vol.~45, n\textsuperscript{o}~1, p.~5-32, 2001.
+  \bibitem{lie1} J.~E. Anderson et E.~van Wincoop, « Gravity with Gravitas: A Solution to the Border Puzzle », \textit{American Economic Review}, vol.~93, n\textsuperscript{o}~1, p.~170-192, 2003.
+  \bibitem{lie2} J.~M.~C. Santos Silva et S.~Tenreyro, « The Log of Gravity », \textit{Review of Economics and Statistics}, vol.~88, n\textsuperscript{o}~4, p.~641-658, 2006.
+  \bibitem{sklearn} F.~Pedregosa \textit{et al.}, « Scikit-learn: Machine Learning in Python », \textit{Journal of Machine Learning Research}, vol.~12, p.~2825-2830, 2011.
+  \bibitem{support} Support du cours BD \& DS, notebook \texttt{Tp\_ML.ipynb}, ENCG-2026.
+\end{thebibliography}
+
+% =====================================================================
+%  ANNEXES
+% =====================================================================
+\appendix
+
+\section{Reproduction}
+\label{ann:reproduction}
+Version corrigée : étiquette \texttt{remise-finale} du dépôt \afficherlien.
+\begin{enumerate}
+  \item Cloner le dépôt : \texttt{git clone} suivi du lien ci-dessus.
+  \item Installer les dépendances : \texttt{pip install -r requirements.txt}.
+  \item Exécuter \texttt{notebooks/CI16\_23009078.ipynb} avec « Redémarrer et tout exécuter ».
+\end{enumerate}
+
+\section{Tableaux et figures complémentaires}
+\label{ann:complements}
+\insererfigure{fig_annexe_top10.png}{Dix principaux partenaires selon la valeur moyenne des exportations (USD)}{fig:annexe1}
+
+\noindent\textbf{Lecture de la figure~\ref{fig:annexe1}.} Les moyennes par partenaire diffèrent nettement, la France arrivant en tête devant la Turquie, les États-Unis et la Chine. Ces écarts sont simulés ; sur des données réelles, ils justifieraient de regrouper les partenaires par profil de croissance.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Matrice de confusion sur le test (lignes : classe réelle ; colonnes : classe prédite)}
+  \label{tab:confusion}
+  \small
+  \begin{tabular}{@{}l ccc@{}}
+    \toprule
+    Réel $\backslash$ prédit & Faible (0) & Modérée (1) & Forte (2) \\
+    \midrule
+    Faible (0) & 3 & 3 & 0 \\
+    Modérée (1) & 7 & 1 & 2 \\
+    Forte (2) & 4 & 0 & 3 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Déclaration des outils d'IA}
+\label{ann:ia}
+\begin{table}[htbp]
+  \centering
+  \caption{Ressources et outils d'IA utilisés}
+  \label{tab:ia}
+  \small
+  \begin{tabular}{@{}P{3cm} P{4.8cm} P{3.3cm} P{4.4cm}@{}}
+    \toprule
+    Outil ou ressource & Usage précis & Parties concernées & Vérification effectuée \\
+    \midrule
+    Claude (Anthropic), 26/11/2026 & Mise en forme LaTeX du rapport à partir du notebook, rédaction du texte et régénération des figures & Toutes les sections & Chiffres comparés aux sorties du notebook rejoué (graine 42) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\end{document}
